@@ -25,7 +25,7 @@ SECRET_KEY = '90gvl%sru@w9^8*y$7wwhr8_%&aszom(t)l+h^#&q6z@3+3f9('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1' , 'http://ca72ss.pythonanywhere.com/']
 
 
 # Application definition
