@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<head>
+
+</head>
+<body>
+  <div>
+    <h1><a href="/">Gtron</a></h1>
+</div>
+{% for u in users %}
+<p><img src='{{ u.photo_100 }}'</p>
+<p>{{u.first_name}} {{u.last_name}}</p>
+{% endfor %}
+</body>
