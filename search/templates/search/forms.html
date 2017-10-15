@@ -1,0 +1,9 @@
+{% extends 'search/base.html' %}
+{% block content %}
+<form action="get_name" method="get">
+    {% csrf_token %}
+    <label for="your_name">Your name: </label>
+    <input id="your_name" type="text" name="your_name" maxlength="100" required />
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}
