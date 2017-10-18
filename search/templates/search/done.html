@@ -3,5 +3,13 @@
 {% for u in users %}
       <p><img src='{{ u.photo_100 }}'</p>
       <p>{{u.first_name}} {{u.last_name}}</p>
+      {% if u.can_write_private_message == 1 %}
+       <button class="sendM", id = "{{u.uid}}">Отправить сообщение </button>
+               {% elif u.can_send_friend_request == 1 %}
+               <button class="sendM", id = "{{u.uid}}"> Добавить в друзья </button>
+               {% else %}
+                    <div> Отказано в доступе</div>
+               {% endif %}
+
 {% endfor %}
 {% endblock %}
