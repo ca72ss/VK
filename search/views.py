@@ -4,15 +4,15 @@ import vk
 from django.contrib.sessions.backends.db import SessionStore
 
 s = SessionStore()
-s ['at'] = '371aacf18130dc370fa8d1a9f4c33125208b2a9e84e6abd26a16aa5d412dc8174fbab26a001f55f1d024f'
+s['at'] = '6eb4f75d4edf5d4d24abec9f1c749bb5dfc8240262dfefe7b61b3e392f9a297138e539d2d37c93b696465'
 
 def search(request):
 
-    session = vk.Session(access_token= s ['at'])
+    session = vk.Session(access_token= s['at'])
     api = vk.API(session)
-    users = api.users.search(count=100,  age_from=14, age_to=18, school_year=2017,  fields = "photo_100,last_seen,photo_id,has_mobile,universities")
+    users = api.users.search(count=100,  age_from=14, age_to=18, school_year=2017,  fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
     groups = api.groups.getMembers(group_id='142498173')
-    print (groups)
+    print (s['at'])
     del users[0]
     return render(request, 'search/done.html', {'users':users})
 
@@ -23,7 +23,7 @@ def forms(request):
 
 
 def get_name(request):
-    session = vk.Session(access_token= s ['at'])
+    session = vk.Session(access_token= s['at'])
     api = vk.API(session)
 
     city_name = 'Шостка'
@@ -52,6 +52,24 @@ def getGroupUsers(request):
     session = vk.Session(access_token= s ['at'])
     api = vk.API(session)
     groupsUsers = api.groups.getMembers(group_id = '127378018',fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
-    users = groupsUsers['users']
-    print (groupsUsers)
+    groupsUsers2 = api.groups.getMembers(group_id = '43325743',fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
+    s['group1'] = users = groupsUsers['users']
+    s['group2']= users2 = groupsUsers2['users']
+    print (s['group1'])
+    print (s['group2'])
     return render(request, 'search/done.html', {'users':users})
+
+def intersection(request):
+    session = vk.Session(access_token = s['at'])
+    api=vk.API(session)
+    #pips = s['group1'] & s['group2']
+    print (s['group1'])
+
+def message(request,arg):
+    session = vk.Session(access_token= s ['at'])
+    api = vk.API(session)
+    id = request.args.get('id')
+    ud = api.users.get(user_ids=id,fields='last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request')[0]
+    print (id)
+    print(ud)
+    return render(request, 'search/test.html')
