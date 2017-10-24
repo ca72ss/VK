@@ -4,7 +4,7 @@ import vk
 from django.contrib.sessions.backends.db import SessionStore
 
 s = SessionStore()
-s['at'] = '6eb4f75d4edf5d4d24abec9f1c749bb5dfc8240262dfefe7b61b3e392f9a297138e539d2d37c93b696465'
+s['at'] = 'c3c55cb015f5c383ec3495eee0fe25b8c8e1a583a07543b3856247c28c41a1103b9c24b388447e6158e56'
 
 def search(request):
 
@@ -53,17 +53,25 @@ def getGroupUsers(request):
     api = vk.API(session)
     groupsUsers = api.groups.getMembers(group_id = '127378018',fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
     groupsUsers2 = api.groups.getMembers(group_id = '43325743',fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
-    s['group1'] = users = groupsUsers['users']
-    s['group2']= users2 = groupsUsers2['users']
-    print (s['group1'])
-    print (s['group2'])
-    return render(request, 'search/done.html', {'users':users})
+    group_1 = groupsUsers['users']
+    group_2 = groupsUsers2['users']
+    request.session['groups1'] = group_1
+    request.session['groups2'] = group_2
+    return render(request, 'search/done.html', {'users':group_1})
 
 def intersection(request):
     session = vk.Session(access_token = s['at'])
     api=vk.API(session)
-    #pips = s['group1'] & s['group2']
-    print (s['group1'])
+    groupsUsers = api.groups.getMembers(group_id = '127378018',fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
+    groupsUsers2 = api.groups.getMembers(group_id = '43325743',fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
+    group_1 = groupsUsers['users']
+    group_2 = groupsUsers2['users']
+    gu1=[u['uid'] for u in group1]
+    gu2=[u['uid'] for u in group2]
+    result=list(set(gu1) & set(gu2))
+    users = api.users.get(user_ids = result,fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
+    print (users)
+    return render(request, 'search/done.html', {'users':users})
 
 def message(request,arg):
     session = vk.Session(access_token= s ['at'])
