@@ -1,6 +1,5 @@
 {% extends 'search/base.html' %}
 {% block content %}
-{% load bootstrap3 %}
 <form action="get_name" method="get">
     {% csrf_token %}
     <label for="your_name">Your name: </label>
