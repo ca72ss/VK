@@ -1,9 +1,26 @@
 {% extends 'search/base.html' %}
 {% block content %}
+{% load bootstrap3 %}
 <form action="get_name" method="get">
     {% csrf_token %}
     <label for="your_name">Your name: </label>
     <input id="your_name" type="text" name="your_name" maxlength="100" required />
+    <label for="groups">Groups: </label>
+    <input id="groups" type="text" name="groups" maxlength="1000" required />
     <input type="submit" value="Submit" />
+</form>
+
+
+<form action="get_name" method="get" class="form">
+    {% csrf_token %}
+    {% for field in form %}
+    {% bootstrap_field field %}
+    {% endfor %}
+    {% bootstrap_label "Your Name" label_for="your_name" %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "star" %} Submit
+        </button>
+    {% endbuttons %}
 </form>
 {% endblock %}

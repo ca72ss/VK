@@ -1,0 +1,10 @@
+{% extends 'search/base.html' %}
+{% block content %}
+{% load bootstrap3 %}
+<form action="get_at" method="get">
+    {% csrf_token %}
+    <label for="at">AT: </label>
+    <input id="at" type="text" name="at" maxlength="1000" required />
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}
