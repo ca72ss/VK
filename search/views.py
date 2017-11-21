@@ -2,9 +2,17 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import vk
 from django.contrib.sessions.backends.db import SessionStore
+from requests.exceptions import ConnectionError
+import vk.exceptions
+
 
 def login(request):
     return render (request,'search/login.html')
+
+def logout(request):
+    del request.session['at']
+    alert = 'Куки очищены'
+    return render (request,'search/test.html',{'alert':alert})
 
 def get_at(request):
 
@@ -17,11 +25,17 @@ def search(request):
     at = request.session.get('at', '')
     session = vk.Session(access_token= at)
     api = vk.API(session)
-    users = api.users.search(count=100,  age_from=14, age_to=18, school_year=2017,  fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
-    groups = api.groups.getMembers(group_id='142498173')
-    print (at)
-    del users[0]
-    return render(request, 'search/done.html', {'users':users})
+    try:
+        users = api.users.search(count=100,  age_from=14, age_to=18, school_year=2017,  fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
+    except vk.exceptions.VkAPIError as e:
+        alert = 'Введите ваш токен'
+        return render (request,'search/login.html', {'alert':alert})
+    else:
+        print ('Все гуд')
+        groups = api.groups.getMembers(group_id='142498173')
+        print (at)
+        del users[0]
+        return render(request, 'search/done.html', {'users':users})
 
 
 def forms(request):
@@ -70,7 +84,7 @@ def intersection(request):
     return render(request, 'search/done.html', {'users':users})
 
 def message(request,arg):
-    
+
     at = request.session.get('at', '')
     session = vk.Session(access_token= at)
     api = vk.API(session)
