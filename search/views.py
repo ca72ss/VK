@@ -4,6 +4,7 @@ import vk
 from django.contrib.sessions.backends.db import SessionStore
 from requests.exceptions import ConnectionError
 import vk.exceptions
+from collections import Counter
 
 
 def login(request):
@@ -54,15 +55,21 @@ def get_name(request):
 
         groups_s = request.session.get('groups_s', '')
         test = groups_s.split(',')
-        groupsUsers = api.groups.getMembers(group_id = test[0],fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
-        groupsUsers2 = api.groups.getMembers(group_id = test[1],fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
-        group_1 = groupsUsers['users']
-        group_2 = groupsUsers2['users']
-        gu1=[u['uid'] for u in group_1]
-        gu2=[u['uid'] for u in group_2]
-        result=list(set(gu1) & set(gu2))
-        users = api.users.get(user_ids = result,fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
-        print (test)
+        res = []
+        for x in test:
+            groupsUsers = api.groups.getMembers(group_id = x,fields = "photo_100")
+            group_1 = groupsUsers['users']
+            gu1=[u['uid'] for u in group_1]
+            res.extend(gu1)
+        resul = Counter(res)
+        result = dict(resul)
+        ids=[]
+        print (result)
+        for key, value in result.items():
+            if value>1:
+                ids.append(str(key))
+        print(ids)
+        users = api.users.get(user_ids = ids,fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
         return render(request, 'search/done.html', {'users':users})
 
 
@@ -80,7 +87,7 @@ def intersection(request):
     gu2=[u['uid'] for u in group_2]
     result=list(set(gu1) & set(gu2))
     users = api.users.get(user_ids = result,fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
-    print (test)
+    print (test[0])
     return render(request, 'search/done.html', {'users':users})
 
 def message(request,arg):
