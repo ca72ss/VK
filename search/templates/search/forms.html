@@ -1,11 +1,33 @@
 {% extends 'search/base.html' %}
 {% block content %}
-<form action="get_name" method="get">
-    {% csrf_token %}
-    <label for="your_name">Your name: </label>
-    <input id="your_name" type="text" name="your_name" maxlength="100" required />
-    <label for="groups">Groups: </label>
-    <input id="groups" type="text" name="groups" maxlength="1000" required />
-    <input type="submit" value="Submit" />
+<div class="row">
+  <div class="col-sm-3">
+  </div>
+  <div class="col-sm-3">
+    <form action="get_name" method="get">
+        {% csrf_token %}
+        <h4>Пересечение сообществ</h4>
+          <p>Введите id c новой строки</p>
+        <Textarea id="groups" type="Textarea" name="groups" maxlength="1000" required style="margin: 0px; width: 210px; height: 350px;"  /></Textarea>
+   </div>
+  <div class="col-sm-3">
+    <h4>Фильтры поиска</h4>
+    <p>Заполните все поля</p>
+     <label for="city">Город: </label>
+    <input id="city" type="text" name="city" maxlength="100" required />
+    <p></p>
+     <label for="school">Школа: </label>
+    <input id="school" type="text" name="school" maxlength="100" required />
+    <p></p>
+     <label for="school_year">Год окончания: </label>
+    <input id="school_year" type="text" name="school_year" maxlength="100" required />
+    <p></p>
+    <p><input type="submit" value="Submit" /></p>
 </form>
+  </div>
+   <div class="col-sm-3">
+  </div>
+</div>
+</div>
+
 {% endblock %}

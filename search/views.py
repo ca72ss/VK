@@ -49,28 +49,43 @@ def get_name(request):
     session = vk.Session(access_token= at)
     api=vk.API(session)
 
-    if 'your_name' in request.GET and request.GET['your_name']:
-        your_name = request.GET['your_name']
-        request.session['groups_s'] =request.GET['groups']
+    city = request.GET['city']
+    school = request.GET['school']
+    school_year = request.GET['school_year']
+    request.session['groups_s'] =request.GET['groups']
 
-        groups_s = request.session.get('groups_s', '')
-        test = groups_s.split(',')
-        res = []
-        for x in test:
-            groupsUsers = api.groups.getMembers(group_id = x,fields = "photo_100")
-            group_1 = groupsUsers['users']
-            gu1=[u['uid'] for u in group_1]
-            res.extend(gu1)
-        resul = Counter(res)
-        result = dict(resul)
-        ids=[]
-        print (result)
-        for key, value in result.items():
-            if value>1:
-                ids.append(str(key))
-        print(ids)
-        users = api.users.get(user_ids = ids,fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
-        return render(request, 'search/done.html', {'users':users})
+    UA_CID = api.database.getCountries(code='UA')[0]['cid']
+    CITY = api.database.getCities(country_id=UA_CID, q=city)
+    nc = 0
+    CITY_ID = CITY[nc]['cid']
+    SCHOOL =  api.database.getSchools(q=school,city_id=CITY_ID)
+    SCHOOL_ID = SCHOOL[1]['id']
+    ids_s = []
+    users_s = api.users.search(count=10,country=UA_CID, age_from=0, age_to=99, school_year=school_year, school = SCHOOL_ID, fields = "photo_100,last_seen,photo_id,has_mobile,universities")
+    del users_s[0]
+    for u in users_s:
+        ids_s.append(str(u['uid']))
+    print (ids_s)
+
+    groups_s = request.session.get('groups_s', '')
+    test = groups_s.split("\n")
+    res = []
+    for x in test:
+        groupsUsers = api.groups.getMembers(group_id = x,fields = "photo_100")
+        group_1 = groupsUsers['users']
+        gu1=[u['uid'] for u in group_1]
+        res.extend(gu1)
+    resul = Counter(res)
+    result = dict(resul)
+    ids=[]
+    for key, value in result.items():
+        if value>1:
+            ids.append(str(key))
+    result_ids=list(set(ids) & set(ids_s))
+    print (ids)
+    print(result_ids)
+    users = api.users.get(user_ids = result_ids,fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
+    return render(request, 'search/done.html', {'users':users})
 
 
 def intersection(request):
