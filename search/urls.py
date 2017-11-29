@@ -7,9 +7,11 @@ urlpatterns = [
     url(r'^login$', views.login, name='login'),
     url(r'^logout$', views.logout, name='logout'),
     url(r'^forms$', views.forms, name='forms'),
-    url(r'^search$', views.search, name='search'),
+    url(r'^create_message$', views.create_message, name='create_message'),
     url(r'^get_at$', views.get_at, name='get_at'),
     url(r'^get_name$', views.get_name, name='get_name'),
     url(r'^message$', views.message, name='message'),
     url(r'^intersection$', views.intersection, name='intersection'),
+    url(r'^post_list$', views.post_list, name='post_list'),
+    url(r'^post/(?P<pk>\d+)/$', views.post_detail, name='post_detail'),
 ]

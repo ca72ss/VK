@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 import vk
 from django.contrib.sessions.backends.db import SessionStore
@@ -6,6 +6,7 @@ from requests.exceptions import ConnectionError
 import vk.exceptions
 from collections import Counter
 import time
+from .models import Post
 
 def login(request):
     return render (request,'search/login.html')
@@ -18,25 +19,12 @@ def logout(request):
 def get_at(request):
 
     if 'at' in request.GET and request.GET['at']:
-        request.session['at'] =request.GET['at']
+        request.session['at'] = request.GET['at']
     return render (request,'search/forms.html')
 
-def search(request):
+def create_message(request):
 
-    at = request.session.get('at', '')
-    session = vk.Session(access_token= at)
-    api = vk.API(session)
-    try:
-        users = api.users.search(count=100,  age_from=14, age_to=18, school_year=2017,  fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
-    except vk.exceptions.VkAPIError as e:
-        alert = 'Введите ваш токен'
-        return render (request,'search/login.html', {'alert':alert})
-    else:
-        print ('Все гуд')
-        groups = api.groups.getMembers(group_id='142498173')
-        print (at)
-        del users[0]
-        return render(request, 'search/done.html', {'users':users})
+        return render(request, 'search/create_message.html')
 
 
 def forms(request):
@@ -115,7 +103,7 @@ def intersection(request):
     users = api.users.get(user_ids = result,fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
     print (test[0])
     return render(request, 'search/done.html', {'users':users})
-    
+
 
 def message(request):
 
@@ -126,3 +114,10 @@ def message(request):
     users = api.users.get(user_ids=us_id,fields='last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request')[0]
     print (us_id)
     return render(request, 'search/test.html', {'users':users})
+
+def post_list(request):
+    return render(request, 'search/post_list.html', {})
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    return render(request, 'blog/post_detail.html', {'post': post})    
