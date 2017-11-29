@@ -5,7 +5,7 @@ from django.contrib.sessions.backends.db import SessionStore
 from requests.exceptions import ConnectionError
 import vk.exceptions
 from collections import Counter
-
+import time
 
 def login(request):
     return render (request,'search/login.html')
@@ -45,6 +45,7 @@ def forms(request):
 
 
 def get_name(request):
+
     at = request.session.get('at', '')
     session = vk.Session(access_token= at)
     api=vk.API(session)
@@ -61,7 +62,8 @@ def get_name(request):
     SCHOOL =  api.database.getSchools(q=school,city_id=CITY_ID)
     SCHOOL_ID = SCHOOL[1]['id']
     ids_s = []
-    users_s = api.users.search(count=10,country=UA_CID, age_from=0, age_to=99, school_year=school_year, school = SCHOOL_ID, fields = "photo_100,last_seen,photo_id,has_mobile,universities")
+
+    users_s = api.users.search(count=1000,country=UA_CID, age_from=0, age_to=99, school_year=school_year, school = SCHOOL_ID, fields = "photo_100,last_seen,photo_id,has_mobile,universities")
     del users_s[0]
     for u in users_s:
         ids_s.append(str(u['uid']))
@@ -70,13 +72,21 @@ def get_name(request):
     groups_s = request.session.get('groups_s', '')
     test = groups_s.split("\n")
     res = []
+    #c = api.execute(code='return API.users.get({"user_ids": API.audio.search({"q":"Beatles", "count":3}).items@.owner_id})@.last_name')
+    #print (c)
+    #of = 0
+    #while of<300000:
     for x in test:
-        groupsUsers = api.groups.getMembers(group_id = x,fields = "photo_100")
+        groupsUsers = api.groups.getMembers(group_id = x, fields = "photo_100")
+        #of+=1000
         group_1 = groupsUsers['users']
         gu1=[u['uid'] for u in group_1]
         res.extend(gu1)
+        #time.sleep(0.33)
+
     resul = Counter(res)
     result = dict(resul)
+    print (result)
     ids=[]
     for key, value in result.items():
         if value>1:
@@ -84,6 +94,7 @@ def get_name(request):
     result_ids=list(set(ids) & set(ids_s))
     print (ids)
     print(result_ids)
+
     users = api.users.get(user_ids = result_ids,fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
     return render(request, 'search/done.html', {'users':users})
 
@@ -104,14 +115,14 @@ def intersection(request):
     users = api.users.get(user_ids = result,fields = "photo_100,last_seen,photo_id,has_mobile,universities,last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request")
     print (test[0])
     return render(request, 'search/done.html', {'users':users})
+    
 
-def message(request,arg):
+def message(request):
 
     at = request.session.get('at', '')
     session = vk.Session(access_token= at)
     api = vk.API(session)
-    id = request.args.get('id')
-    ud = api.users.get(user_ids=id,fields='last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request')[0]
-    print (id)
-    print(ud)
-    return render(request, 'search/test.html')
+    us_id = request.GET.get('id')
+    users = api.users.get(user_ids=us_id,fields='last_seen,photo_id,has_mobile,universities,can_write_private_message,can_send_friend_request')[0]
+    print (us_id)
+    return render(request, 'search/test.html', {'users':users})

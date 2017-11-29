@@ -1,5 +1,7 @@
 {% extends 'search/base.html' %}
 {% block content %}
+
+
 <div class="row">
   <div class="col-sm-3">
   </div>
@@ -8,21 +10,31 @@
         {% csrf_token %}
         <h4>Пересечение сообществ</h4>
           <p>Введите id c новой строки</p>
-        <Textarea id="groups" type="Textarea" name="groups" maxlength="1000" required style="margin: 0px; width: 210px; height: 350px;"  /></Textarea>
+          <div class="form-group">
+            <textarea type="Textarea" name="groups" class="form-control" rows="7" id="groups"></textarea>
+          </div>
+          <p><input type="submit" class="btn btn-primary btn-lg" value="Submit"></p>
    </div>
   <div class="col-sm-3">
     <h4>Фильтры поиска</h4>
     <p>Заполните все поля</p>
-     <label for="city">Город: </label>
-    <input id="city" type="text" name="city" maxlength="100" required />
+    <div class="input-group input-group-lg">
+  <span class="input-group-addon" id="sizing-addon1"></span>
+  <input id="city" type="text" name="city" class="form-control" placeholder="Город" aria-describedby="sizing-addon1" required />
+</div>
+<p></p>
+<div class="input-group input-group-lg">
+  <span class="input-group-addon" id="sizing-addon1"></span>
+  <input id="school" type="text" name="school" class="form-control" placeholder="Школа" aria-describedby="sizing-addon1" required />
+</div>
+<p></p>
+<div class="input-group input-group-lg">
+  <span class="input-group-addon" id="sizing-addon1"></span>
+  <input id="school_year" type="text" name="school_year" type="text" class="form-control" placeholder="Год окончания" aria-describedby="sizing-addon1" required />
+</div>
+<p></p>
     <p></p>
-     <label for="school">Школа: </label>
-    <input id="school" type="text" name="school" maxlength="100" required />
-    <p></p>
-     <label for="school_year">Год окончания: </label>
-    <input id="school_year" type="text" name="school_year" maxlength="100" required />
-    <p></p>
-    <p><input type="submit" value="Submit" /></p>
+
 </form>
   </div>
    <div class="col-sm-3">
