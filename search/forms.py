@@ -1,4 +1,5 @@
 from django import forms
+from .models import Post
 
 class NameForm(forms.Form):
     city = forms.CharField(label='city', max_length=100)
@@ -11,3 +12,9 @@ class NameForm(forms.Form):
 
 class Login(forms.Form):
     at = forms.CharField(label = 'at', max_length=1000)
+
+class PostForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = ('title', 'text',)

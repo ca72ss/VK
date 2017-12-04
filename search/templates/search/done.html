@@ -1,9 +1,10 @@
 {% extends 'search/base.html' %}
 {% block content %}
-<script>
+<script type="text/javascript">
 $('.sendM').click(function(){
 id_user=($(this).attr('id'));
-$.get( "/message",{id:id_user})})
+$.get( "/message",{id:id_user})
+})
 </script>
 {% for u in users %}
    <div class="row">
