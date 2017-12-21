@@ -17,6 +17,9 @@ urlpatterns = [
     url(r'^post/new/$', views.post_new, name='post_new'),
     url(r'^post/(?P<pk>\d+)/edit/$', views.post_edit, name='post_edit'),
     url(r'^get_message$', views.get_message, name='get_message'),
+<<<<<<< HEAD
     url(r'^visualisation$', views.visualisation, name='visualisation'),
 
+=======
+>>>>>>> 161d3843e3aac5b19729ea055c06c9f531a755a7
 ]

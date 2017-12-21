@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.5.1 virtualenv at C:\Users\garin\myvenv" project-jdk-type="Python SDK" />
+=======
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.5.2 virtualenv at ~/Documents/myvenv" project-jdk-type="Python SDK" />
+>>>>>>> 161d3843e3aac5b19729ea055c06c9f531a755a7
 </project>
